@@ -19,5 +19,5 @@ public class Role {
 
     @Column(length = 100, nullable = false)
     private String description;
-    
+
 }
