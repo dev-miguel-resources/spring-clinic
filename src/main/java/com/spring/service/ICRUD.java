@@ -4,11 +4,9 @@ import java.util.List;
 
 public interface ICRUD<T, ID> {
 
-    // pendiente para más adelante
-
     T save(T t);
 
-    T update(T t, ID id);
+    T update(T t, ID id) throws Exception;
 
     List<T> findAll();
 

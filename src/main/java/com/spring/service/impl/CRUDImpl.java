@@ -1,7 +1,9 @@
 package com.spring.service.impl;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import com.spring.exception.ModelNotFoundException;
 import com.spring.repo.IGenericRepo;
 import com.spring.service.ICRUD;
 
@@ -16,8 +18,15 @@ public abstract class CRUDImpl<T, ID> implements ICRUD<T, ID> {
     }
 
     @Override
-    public T update(T t, ID id) {
-         // pendiente el tema de excepciones y otros
+    public T update(T t, ID id) throws Exception {
+         // API JAVA: REFLEXION
+         Class<?> classType = t.getClass();
+         String className = t.getClass().getSimpleName();
+         String methodName = "setId" + className;
+         Method setIdMethod = classType.getMethod(methodName, id.getClass());
+         setIdMethod.invoke(t, id);
+
+        getRepo().findById(id).orElseThrow(()-> new ModelNotFoundException("ID NOT FOUND" + id));
         return getRepo().save(t);
     }
 
@@ -28,14 +37,12 @@ public abstract class CRUDImpl<T, ID> implements ICRUD<T, ID> {
 
     @Override
     public T findById(ID id) {
-        // Supplier -> Optional(T)
-        // pendiente el tema de excepciones
-        return getRepo().findById(id).orElse(null);
+        return getRepo().findById(id).orElseThrow(()-> new ModelNotFoundException("ID NOT FOUND" + id));
     }
 
     @Override
     public void delete(ID id) {
-        // pendiente el tema de excepciones
+        getRepo().findById(id).orElseThrow(()-> new ModelNotFoundException("ID NOT FOUND" + id));
         getRepo().deleteById(id);
     }
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class MapperConfig {
 
     // te devuelve un conversor de datos
-    @Bean
+    @Bean("defaultMapper")
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
