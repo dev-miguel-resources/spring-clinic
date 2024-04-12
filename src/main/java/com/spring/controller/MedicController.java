@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.spring.dto.PatientDTO;
-//import com.spring.dto.PatientRecord;
-//import com.spring.dto.PatientRecord;
-import com.spring.model.Patient;
-import com.spring.service.IPatientService;
+import com.spring.dto.MedicDTO;
+//import com.spring.dto.MedicRecord;
+//import com.spring.dto.MedicRecord;
+import com.spring.model.Medic;
+import com.spring.service.IMedicService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,40 +34,40 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/medics")
 @RequiredArgsConstructor
-public class PatientController {
+public class MedicController {
 
-    private final IPatientService service;
+    private final IMedicService service;
 
     @Qualifier("defaultMapper")
     private final ModelMapper mapper;
 
-    private PatientDTO convertToDto(Patient obj) {
-        return mapper.map(obj, PatientDTO.class);
+    private MedicDTO convertToDto(Medic obj) {
+        return mapper.map(obj, MedicDTO.class);
     }
 
-    private Patient convertToEntity(PatientDTO dto) {
-        return mapper.map(dto, Patient.class);
+    private Medic convertToEntity(MedicDTO dto) {
+        return mapper.map(dto, Medic.class);
     }
 
     // debo traer todos los servicios implementados para crear mis apis rest
     @GetMapping
-    // public ResponseEntity<List<PatientRecord>> findAll() {
-    public ResponseEntity<List<PatientDTO>> findAll() {
+    // public ResponseEntity<List<MedicRecord>> findAll() {
+    public ResponseEntity<List<MedicDTO>> findAll() {
         // forma 1 genérica
         /*
-         * List<PatientDTO> listExample = service.findAll().stream().map(e ->
+         * List<MedicDTO> listExample = service.findAll().stream().map(e ->
          * convertToDto(e)).toList();
          * return new ResponseEntity<>(listExample, HttpStatus.OK);
          */
         // forma 2 moderna
-        List<PatientDTO> list = service.findAll().stream().map(this::convertToDto).toList();
+        List<MedicDTO> list = service.findAll().stream().map(this::convertToDto).toList();
         return new ResponseEntity<>(list, HttpStatus.OK);
         // forma 3
         /*
-         * List<PatientRecord> list = service.findAll().stream().map(e ->
-         * new PatientRecord(e.getIdPatient(), e.getFirstName(), e.getLastName(),
+         * List<MedicRecord> list = service.findAll().stream().map(e ->
+         * new MedicRecord(e.getIdMedic(), e.getFirstName(), e.getLastName(),
          * e.getDni(), e.getAddress(), e.getPhone(), e.getEmail())
          * ).toList();
          * return new ResponseEntity<>(list, HttpStatus.OK);
@@ -75,46 +75,44 @@ public class PatientController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<PatientDTO> save(@Valid @RequestBody PatientDTO dto) {
-        Patient obj = service.save(convertToEntity(dto));
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient())
+    public ResponseEntity<MedicDTO> save(@Valid @RequestBody MedicDTO dto) {
+        Medic obj = service.save(convertToEntity(dto));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMedic())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id) {
-        Patient obj = service.findById(id);
+    public ResponseEntity<MedicDTO> findById(@PathVariable("id") Integer id) {
+        Medic obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<PatientDTO> findByHateoas(@PathVariable("id") Integer id) {
-        EntityModel<PatientDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
+    public EntityModel<MedicDTO> findByHateoas(@PathVariable("id") Integer id) {
+        EntityModel<MedicDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
 
-        resource.add(link1.withRel("patient-info1"));
-        resource.add(link1.withRel("patient-info2"));
+        resource.add(link1.withRel("Medic-info1"));
+        resource.add(link1.withRel("Medic-info2"));
 
         return resource;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> update(@PathVariable("id") Integer id, @RequestBody PatientDTO dto)
+    public ResponseEntity<Medic> update(@PathVariable("id") Integer id, @RequestBody MedicDTO dto)
             throws Exception {
-        Patient obj = service.update(convertToEntity(dto), id);
+        Medic obj = service.update(convertToEntity(dto), id);
         return new ResponseEntity<>(obj, HttpStatus.OK);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Patient> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Medic> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    // pendientes otros servicios a exponer para más adelante
 
 }
