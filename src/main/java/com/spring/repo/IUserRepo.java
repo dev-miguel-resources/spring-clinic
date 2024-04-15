@@ -5,4 +5,5 @@ import com.spring.model.User;
 public interface IUserRepo extends IGenericRepo<User, Integer> {
     
     // pendiente de querys
+    // 1. obtener referencias de usuarios por su username
 }

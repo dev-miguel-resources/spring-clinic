@@ -25,7 +25,7 @@ public class MedicDTO {
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 12)
-    private String codMed;
+    private String codMedic;
 
     @NotNull
     @NotEmpty
