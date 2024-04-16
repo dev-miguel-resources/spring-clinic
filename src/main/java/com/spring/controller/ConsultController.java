@@ -4,27 +4,27 @@ import java.net.URI;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spring.dto.ConsultDTO;
-//import com.spring.dto.ConsultRecord;
+import com.spring.dto.ConsultListExamDTO;
 //import com.spring.dto.ConsultRecord;
 import com.spring.model.Consult;
+import com.spring.model.Exam;
 import com.spring.service.IConsultService;
 
 import jakarta.validation.Valid;
@@ -75,10 +75,22 @@ public class ConsultController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<ConsultDTO> save(@Valid @RequestBody ConsultDTO dto) {
-        Consult obj = service.save(convertToEntity(dto));
+    public ResponseEntity<ConsultDTO> save(@Valid @RequestBody ConsultListExamDTO dto) {
+        Consult cons = this.convertToEntity(dto.getConsult());
+
+        // alternativa 1
+        // List<Exam> exams = dto.getLstExam().stream().map(e -> mapper.map(e,
+        // Exam.class)).toList();
+
+        // alternativa 2
+        List<Exam> exams = mapper.map(dto.getLstExam(), new TypeToken<List<Exam>>() {
+        }.getType());
+
+        Consult obj = service.saveTransactional(cons, exams);
+
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdConsult())
                 .toUri();
+        
         return ResponseEntity.created(location).build();
     }
 
