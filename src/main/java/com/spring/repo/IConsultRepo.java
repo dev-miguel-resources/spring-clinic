@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.spring.dto.IConsultProcDTO;
 import com.spring.model.Consult;
 
 public interface IConsultRepo extends IGenericRepo<Consult, Integer> {
@@ -16,6 +17,8 @@ public interface IConsultRepo extends IGenericRepo<Consult, Integer> {
     List<Consult> search(@Param("dni") String dni, @Param("fullname") String fullname);
 
     // 2. filtro por rango de fechas
+    // >= | <
+    // 15-09-2024 al 30-09-2024 
     @Query("FROM Consult c WHERE c.consultDate BETWEEN :date1 AND :date2")
     List<Consult> searchByDates(@Param("date1") LocalDateTime date1, @Param("date2") LocalDateTime date2);
 
@@ -26,5 +29,5 @@ public interface IConsultRepo extends IGenericRepo<Consult, Integer> {
 
     // 4. ejemplo desde un proc. almacenado mediante projection
     @Query(value = "select * from fn_list()", nativeQuery = true)
-    List<?> callProcedureOrFunctionProjection();
+    List<IConsultProcDTO> callProcedureOrFunctionProjection();
 }

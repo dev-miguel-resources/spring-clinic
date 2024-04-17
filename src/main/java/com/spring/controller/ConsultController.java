@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spring.dto.ConsultDTO;
 import com.spring.dto.ConsultListExamDTO;
+import com.spring.dto.ConsultProcDTO;
+import com.spring.dto.FilterConsultDTO;
+import com.spring.dto.IConsultProcDTO;
 //import com.spring.dto.ConsultRecord;
 import com.spring.model.Consult;
 import com.spring.model.Exam;
@@ -90,7 +96,7 @@ public class ConsultController {
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdConsult())
                 .toUri();
-        
+
         return ResponseEntity.created(location).build();
     }
 
@@ -127,6 +133,49 @@ public class ConsultController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // pendientes otros servicios a exponer para más adelante
+    @PostMapping("/search/others")
+    public ResponseEntity<List<ConsultDTO>> searchByOthers(@RequestBody FilterConsultDTO filterDTO) {
+        List<Consult> consults = service.search(filterDTO.getDni(), filterDTO.getFullname());
+
+        // forma 1
+        List<ConsultDTO> consultDTOs = consults.stream().map(e -> mapper.map(e, ConsultDTO.class)).toList();
+        // forma 2
+        // List<ConsultDTO> consultDTOs = mapper.map(consults, new
+        // TypeToken<List<ConsultDTO>>(){}.getType());
+
+        return new ResponseEntity<>(consultDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/date")
+    public ResponseEntity<List<ConsultDTO>> searchByDates(
+            @RequestParam(value = "date1", defaultValue = "2024-04-17", required = true) String date1,
+            @RequestParam(value = "date2") String date2) {
+        List<Consult> consults = service.searchByDates(LocalDateTime.parse(date1), LocalDateTime.parse(date2));
+        List<ConsultDTO> consultDTOs = mapper.map(consults, new TypeToken<List<ConsultDTO>>() {
+        }.getType());
+
+        return new ResponseEntity<>(consultDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/callProcedureNative")
+    public ResponseEntity<List<ConsultProcDTO>> callProcedureOrFunctionNative() {
+        List<ConsultProcDTO> consults = service.callProcedureOrFunctionNative();
+        return new ResponseEntity<>(consults, HttpStatus.OK);
+    }
+
+    @GetMapping("/callProcedureProjection")
+    public ResponseEntity<List<IConsultProcDTO>> callProcedureOrFunctionProjection() {
+        List<IConsultProcDTO> consults = service.callProcedureOrFunctionProjection();
+        return new ResponseEntity<>(consults, HttpStatus.OK);
+    }
+
+    // forma 1: el dev frontend luego tiene que hacer la transformación a un formato x
+    //@GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+    // forma 2: devolverlo procesado desde el backend
+    @GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generateReport() throws Exception {
+        byte[] data = service.generateReport();
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 
 }
