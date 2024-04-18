@@ -1,9 +1,11 @@
 package com.spring.service;
 
+import java.util.List;
+
 import com.spring.model.Menu;
 
 public interface IMenuService extends ICRUD<Menu, Integer> {
 
     // DRY PRINCIPLE: Don´t repeat yourself!
-    // definiciones pendientes para más adelante
+    List<Menu> getMenusByUsername(String username);
 }

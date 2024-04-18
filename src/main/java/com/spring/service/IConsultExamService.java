@@ -1,8 +1,11 @@
 package com.spring.service;
 
+import java.util.List;
+
+import com.spring.model.ConsultExam;
+
 public interface IConsultExamService {
 
-    // pendiente definiciones para más adelante
+    List<ConsultExam> getExamsByConsultId(Integer idConsult);
 
-    
 }

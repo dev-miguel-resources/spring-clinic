@@ -16,6 +16,8 @@ public class ConsultExam {
 
     @Id
     private Exam exam;
-    
-    // pendiente para más adelante
+
+    public ConsultExam(Exam exam) {
+        this.exam = exam;
+    }
 }

@@ -1,5 +1,7 @@
 package com.spring.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.spring.model.ConsultExam;
@@ -20,6 +22,9 @@ public class ConsultExamServiceImpl extends CRUDImpl<ConsultExam, Integer> imple
         return repo;
     }
 
-    // definiciones para más adelante
+    @Override
+    public List<ConsultExam> getExamsByConsultId(Integer idConsult) {
+        return repo.getExamsByConsultId(idConsult);
+    }
     
 }

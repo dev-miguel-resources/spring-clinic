@@ -1,5 +1,7 @@
 package com.spring.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.spring.model.Menu;
@@ -20,6 +22,10 @@ public class MenuServiceImpl extends CRUDImpl<Menu, Integer> implements IMenuSer
         return repo;
     }
 
-    // definiciones para más adelante
+    @Override
+    public List<Menu> getMenusByUsername(String username) {
+        // agregar una especificación para más adelante de seguridad
+        return repo.getMenusByUsername(username);
+    }
     
 }
