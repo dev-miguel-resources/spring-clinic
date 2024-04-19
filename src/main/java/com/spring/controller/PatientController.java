@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -115,6 +117,10 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // pendientes otros servicios a exponer para más adelante
+    @GetMapping("/pageable")
+    public ResponseEntity<Page<PatientDTO>> listPage(Pageable pageable) {
+        Page<PatientDTO> page = service.listPage(pageable).map(p -> mapper.map(p, PatientDTO.class));
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
 
 }

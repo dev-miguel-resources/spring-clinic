@@ -2,6 +2,7 @@ package com.spring.service.impl;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.spring.model.Menu;
@@ -24,8 +25,8 @@ public class MenuServiceImpl extends CRUDImpl<Menu, Integer> implements IMenuSer
 
     @Override
     public List<Menu> getMenusByUsername(String username) {
-        // agregar una especificación para más adelante de seguridad
-        return repo.getMenusByUsername(username);
+        String contextSessionUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        return repo.getMenusByUsername(contextSessionUser);
     }
-    
+
 }
