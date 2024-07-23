@@ -51,7 +51,7 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
             .authorizeHttpRequests(req -> req
                 .requestMatchers("/login").permitAll() // ruta pública para todos los usuarios
                 //.requestMatchers("/patients/**").permitAll() | .authenticated()
-                .anyRequest().authenticated() // cualquier otra ruta que no sea login son privadas
+                .anyRequest().permitAll() // cualquier otra ruta que no sea login son privadas
             )
             .httpBasic(Customizer.withDefaults()) // protege a las rutas http de ataques de hackers
             .formLogin(AbstractHttpConfigurer::disable) // deshabilito el form login por defecto que trae spring

@@ -20,14 +20,14 @@ public abstract class CRUDImpl<T, ID> implements ICRUD<T, ID> {
     @Override
     public T update(T t, ID id) throws Exception {
          // API JAVA: REFLEXION
-         Class<?> classType = t.getClass();
-         String className = t.getClass().getSimpleName();
-         String methodName = "setId" + className;
-         Method setIdMethod = classType.getMethod(methodName, id.getClass());
-         setIdMethod.invoke(t, id);
+         Class<?> classType = t.getClass(); // obtiene la clase del tipo especifico
+         String className = t.getClass().getSimpleName(); // el nombre de la clase
+         String methodName = "setId" + className; // forma el tipo para establecer el id del elemento
+         Method setIdMethod = classType.getMethod(methodName, id.getClass()); // obtiene el método con la referencia del id
+         setIdMethod.invoke(t, id); // invoca el método de reflexion con el tipo específico
 
         getRepo().findById(id).orElseThrow(()-> new ModelNotFoundException("ID NOT FOUND" + id));
-        return getRepo().save(t);
+        return getRepo().save(t); // actualiza el registro
     }
 
     @Override
