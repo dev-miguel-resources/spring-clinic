@@ -32,6 +32,7 @@ public class CORS implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600"); // tiempo de reconomiento que tienen los navegadores para identificar un recurso de ruta
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
 
+        // healtk check del server
         if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK); // health check: para saber si el servidor responde
         } else {
