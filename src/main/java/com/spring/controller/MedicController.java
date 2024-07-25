@@ -9,7 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +55,7 @@ public class MedicController {
     // debo traer todos los servicios implementados para crear mis apis rest
     
     // public ResponseEntity<List<MedicRecord>> findAll() {
-    @PreAuthorize("@authorizeLogic.hasAccess('findAll')")
+    //@PreAuthorize("@authorizeLogic.hasAccess('findAll')")
     //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")    
     @GetMapping
     public ResponseEntity<List<MedicDTO>> findAll() {

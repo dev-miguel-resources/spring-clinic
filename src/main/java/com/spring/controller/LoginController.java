@@ -1,4 +1,4 @@
-package com.spring.controller;
+/*package com.spring.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,4 +43,4 @@ public class LoginController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-}
+}*/

@@ -1,4 +1,4 @@
-package com.spring.security;
+/*package com.spring.security;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -44,4 +44,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         return mapper.writeValueAsString(object); // transforma a un json
     }
     
-}
+}*/

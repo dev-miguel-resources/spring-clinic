@@ -1,4 +1,4 @@
-package com.spring.security;
+/*package com.spring.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -62,4 +62,4 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
     
             return httpSecurity.build(); // retornamos el filtro de seguridad creado
     }
-}
+}*/
