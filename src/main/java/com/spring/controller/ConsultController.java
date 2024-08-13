@@ -1,7 +1,9 @@
 package com.spring.controller;
 
 import java.net.URI;
+//import java.time.LocalDate;
 import java.time.LocalDateTime;
+//import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -46,7 +48,7 @@ public class ConsultController {
 
     private final IConsultService service;
 
-    @Qualifier("defaultMapper")
+    @Qualifier("consultMapper")
     private final ModelMapper mapper;
 
     private ConsultDTO convertToDto(Consult obj) {
@@ -146,10 +148,15 @@ public class ConsultController {
         return new ResponseEntity<>(consultDTOs, HttpStatus.OK);
     }
 
-    @GetMapping("/search/date")
+    @GetMapping("/search/dates")
     public ResponseEntity<List<ConsultDTO>> searchByDates(
-            @RequestParam(value = "date1", defaultValue = "2024-04-17", required = true) String date1,
-            @RequestParam(value = "date2") String date2) {
+            @RequestParam(value = "date1", required = true) String date1,
+            @RequestParam(value = "date2", required = true) String date2) {
+        /*
+         * if (date1 == null || date1.isEmpty()) {
+         * date1 = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+         * }
+         */
         List<Consult> consults = service.searchByDates(LocalDateTime.parse(date1), LocalDateTime.parse(date2));
         List<ConsultDTO> consultDTOs = mapper.map(consults, new TypeToken<List<ConsultDTO>>() {
         }.getType());
@@ -169,8 +176,10 @@ public class ConsultController {
         return new ResponseEntity<>(consults, HttpStatus.OK);
     }
 
-    // forma 1: el dev frontend luego tiene que hacer la transformación a un formato x
-    //@GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+    // forma 1: el dev frontend luego tiene que hacer la transformación a un formato
+    // x
+    // @GetMapping(value = "/generateReport", produces =
+    // MediaType.APPLICATION_OCTET_STREAM_VALUE)
     // forma 2: devolverlo procesado desde el backend
     @GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateReport() throws Exception {

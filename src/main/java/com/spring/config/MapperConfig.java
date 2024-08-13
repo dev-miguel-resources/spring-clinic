@@ -5,7 +5,9 @@ import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.spring.dto.ConsultDTO;
 import com.spring.dto.MedicDTO;
+import com.spring.model.Consult;
 import com.spring.model.Medic;
 
 @Configuration
@@ -39,6 +41,19 @@ public class MapperConfig {
 
         return mapper;
 
+    }
+
+    @Bean("consultMapper")
+    public ModelMapper consultMapper() {
+        ModelMapper mapper = new ModelMapper();
+        TypeMap<Consult, ConsultDTO> typeMap1 = mapper.createTypeMap(Consult.class, ConsultDTO.class);
+
+        typeMap1.addMapping(e -> e.getMedic().getFirstName(), (dest, v) -> dest.getMedic().setPrimaryName((String) v));
+        typeMap1.addMapping(e -> e.getMedic().getLastName(), (dest, v) -> dest.getMedic().setSurname((String) v));
+        typeMap1.addMapping(e -> e.getMedic().getPhotoUrl(), (dest, v) -> dest.getMedic().setPhoto((String) v));
+        // typeMap1.addMapping(e -> e.getSpecialty().getName(), (dest, v) ->
+        // dest.getSpecialty().setName((String) v));
+        return mapper;
     }
 
 }

@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.spring.model.Medic;
+//import com.spring.model.Medic;
 import com.spring.model.Patient;
-import com.spring.model.Specialty;
+//import com.spring.model.Specialty;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -24,10 +24,10 @@ public class ConsultDTO {
     private Patient patient;
 
     @NotNull
-    private Medic medic;
+    private MedicDTO medic;
 
     @NotNull
-    private Specialty specialty;
+    private SpecialtyDTO specialty;
 
     @NotNull
     private String numConsult;
@@ -38,5 +38,5 @@ public class ConsultDTO {
     @JsonManagedReference
     @NotNull
     private List<ConsultDetailDTO> details;
-    
+
 }
