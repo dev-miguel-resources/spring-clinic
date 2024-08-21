@@ -54,7 +54,7 @@ public class SpecialtyController {
     // debo traer todos los servicios implementados para crear mis apis rest
     @GetMapping
     // public ResponseEntity<List<SpecialtyRecord>> findAll() {
-    public ResponseEntity<List<SpecialtyDTO>> findAll() {
+    public ResponseEntity<List<SpecialtyDTO>> findAll() throws Exception {
         // forma 1 genérica
         /*
          * List<SpecialtyDTO> listExample = service.findAll().stream().map(e ->
@@ -75,22 +75,23 @@ public class SpecialtyController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<SpecialtyDTO> save(@Valid @RequestBody SpecialtyDTO dto) {
+    public ResponseEntity<SpecialtyDTO> save(@Valid @RequestBody SpecialtyDTO dto) throws Exception {
         Specialty obj = service.save(convertToEntity(dto));
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdSpecialty())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(obj.getIdSpecialty())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpecialtyDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<SpecialtyDTO> findById(@PathVariable("id") Integer id) throws Exception {
         Specialty obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<SpecialtyDTO> findByHateoas(@PathVariable("id") Integer id) {
+    public EntityModel<SpecialtyDTO> findByHateoas(@PathVariable("id") Integer id) throws Exception {
         EntityModel<SpecialtyDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
@@ -110,7 +111,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Specialty> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Specialty> delete(@PathVariable("id") Integer id) throws Exception {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

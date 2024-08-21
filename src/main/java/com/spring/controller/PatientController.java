@@ -56,7 +56,7 @@ public class PatientController {
     // debo traer todos los servicios implementados para crear mis apis rest
     @GetMapping
     // public ResponseEntity<List<PatientRecord>> findAll() {
-    public ResponseEntity<List<PatientDTO>> findAll() {
+    public ResponseEntity<List<PatientDTO>> findAll() throws Exception {
         // forma 1 genérica
         /*
          * List<PatientDTO> listExample = service.findAll().stream().map(e ->
@@ -77,7 +77,7 @@ public class PatientController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<PatientDTO> save(@Valid @RequestBody PatientDTO dto) {
+    public ResponseEntity<PatientDTO> save(@Valid @RequestBody PatientDTO dto) throws Exception {
         Patient obj = service.save(convertToEntity(dto));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient())
                 .toUri();
@@ -85,14 +85,14 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id) throws Exception {
         Patient obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<PatientDTO> findByHateoas(@PathVariable("id") Integer id) {
+    public EntityModel<PatientDTO> findByHateoas(@PathVariable("id") Integer id) throws Exception {
         EntityModel<PatientDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
@@ -112,7 +112,7 @@ public class PatientController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Patient> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Patient> delete(@PathVariable("id") Integer id) throws Exception {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,5 +1,8 @@
 package com.spring.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 //import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+//import com.cloudinary.Cloudinary;
 import com.spring.dto.ConsultDTO;
 import com.spring.dto.ConsultListExamDTO;
 import com.spring.dto.ConsultProcDTO;
@@ -33,7 +38,9 @@ import com.spring.dto.IConsultProcDTO;
 //import com.spring.dto.ConsultRecord;
 import com.spring.model.Consult;
 import com.spring.model.Exam;
+import com.spring.model.MediaFile;
 import com.spring.service.IConsultService;
+import com.spring.service.IMediaFileService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +57,8 @@ public class ConsultController {
 
     @Qualifier("consultMapper")
     private final ModelMapper mapper;
+    // private final Cloudinary cloudinary;
+    private final IMediaFileService mfService;
 
     private ConsultDTO convertToDto(Consult obj) {
         return mapper.map(obj, ConsultDTO.class);
@@ -62,7 +71,7 @@ public class ConsultController {
     // debo traer todos los servicios implementados para crear mis apis rest
     @GetMapping
     // public ResponseEntity<List<ConsultRecord>> findAll() {
-    public ResponseEntity<List<ConsultDTO>> findAll() {
+    public ResponseEntity<List<ConsultDTO>> findAll() throws Exception {
         // forma 1 genérica
         /*
          * List<ConsultDTO> listExample = service.findAll().stream().map(e ->
@@ -103,14 +112,14 @@ public class ConsultController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ConsultDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ConsultDTO> findById(@PathVariable("id") Integer id) throws Exception {
         Consult obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<ConsultDTO> findByHateoas(@PathVariable("id") Integer id) {
+    public EntityModel<ConsultDTO> findByHateoas(@PathVariable("id") Integer id) throws Exception {
         EntityModel<ConsultDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
@@ -130,7 +139,7 @@ public class ConsultController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Consult> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Consult> delete(@PathVariable("id") Integer id) throws Exception {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -181,10 +190,64 @@ public class ConsultController {
     // @GetMapping(value = "/generateReport", produces =
     // MediaType.APPLICATION_OCTET_STREAM_VALUE)
     // forma 2: devolverlo procesado desde el backend
-    @GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_PDF_VALUE)
+    /*
+     * @GetMapping(value = "/generateReport", produces =
+     * MediaType.APPLICATION_PDF_VALUE)
+     * public ResponseEntity<byte[]> generateReport() throws Exception {
+     * byte[] data = service.generateReport();
+     * return new ResponseEntity<>(data, HttpStatus.OK);
+     * }
+     */
+
+    @GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> generateReport() throws Exception {
         byte[] data = service.generateReport();
+
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/saveFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> saveFile(@RequestParam("file") MultipartFile file) throws Exception {
+        // DB
+        MediaFile mf = new MediaFile();
+        mf.setFileType(file.getContentType());
+        mf.setFilename(file.getOriginalFilename());
+        mf.setValue(file.getBytes());
+
+        mfService.save(mf);
+
+        // Repo Externo
+        /*
+         * File f = this.convertToFile(file); // convertir un multipart file a file
+         * Map response = cloudinary.uploader().upload(f,
+         * ObjectUtils.asMap("resource_type", "auto")); // automático puede
+         * cualquier archivo
+         * JSONObject json = new JSONObject(response); // recuperar el bloque de
+         * response
+         * String url = json.getString("url"); // la url del recurso
+         * 
+         * System.out.println(url);
+         * //mfService.update(url);
+         */
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/readFile/{idFile}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> readFile(@PathVariable("idFile") Integer idFile) throws Exception {
+
+        byte[] arr = mfService.findById(idFile).getValue();
+
+        return new ResponseEntity<>(arr, HttpStatus.OK);
+    }
+
+    // esto es para recuperarlo correctamente desde el cliente, ya que lo se ocupa
+    // el formato es File
+    public File convertToFile(MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(multipartFile.getBytes());
+        outputStream.close();
+        return file;
+    }
 }

@@ -54,7 +54,7 @@ public class ExamController {
     // debo traer todos los servicios implementados para crear mis apis rest
     @GetMapping
     // public ResponseEntity<List<ExamRecord>> findAll() {
-    public ResponseEntity<List<ExamDTO>> findAll() {
+    public ResponseEntity<List<ExamDTO>> findAll() throws Exception {
         // forma 1 genérica
         /*
          * List<ExamDTO> listExample = service.findAll().stream().map(e ->
@@ -75,7 +75,7 @@ public class ExamController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<ExamDTO> save(@Valid @RequestBody ExamDTO dto) {
+    public ResponseEntity<ExamDTO> save(@Valid @RequestBody ExamDTO dto) throws Exception {
         Exam obj = service.save(convertToEntity(dto));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdExam())
                 .toUri();
@@ -83,14 +83,14 @@ public class ExamController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExamDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ExamDTO> findById(@PathVariable("id") Integer id) throws Exception {
         Exam obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<ExamDTO> findByHateoas(@PathVariable("id") Integer id) {
+    public EntityModel<ExamDTO> findByHateoas(@PathVariable("id") Integer id) throws Exception {
         EntityModel<ExamDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
@@ -110,7 +110,7 @@ public class ExamController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Exam> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Exam> delete(@PathVariable("id") Integer id) throws Exception {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

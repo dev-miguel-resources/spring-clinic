@@ -53,12 +53,12 @@ public class MedicController {
     }
 
     // debo traer todos los servicios implementados para crear mis apis rest
-    
+
     // public ResponseEntity<List<MedicRecord>> findAll() {
-    //@PreAuthorize("@authorizeLogic.hasAccess('findAll')")
-    //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")    
+    // @PreAuthorize("@authorizeLogic.hasAccess('findAll')")
+    // @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     @GetMapping
-    public ResponseEntity<List<MedicDTO>> findAll() {
+    public ResponseEntity<List<MedicDTO>> findAll() throws Exception {
         // forma 1 genérica
         /*
          * List<MedicDTO> listExample = service.findAll().stream().map(e ->
@@ -79,7 +79,7 @@ public class MedicController {
     }
 
     @PostMapping() // nivel de madurez 3
-    public ResponseEntity<MedicDTO> save(@Valid @RequestBody MedicDTO dto) {
+    public ResponseEntity<MedicDTO> save(@Valid @RequestBody MedicDTO dto) throws Exception {
         Medic obj = service.save(convertToEntity(dto));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMedic())
                 .toUri();
@@ -87,14 +87,14 @@ public class MedicController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<MedicDTO> findById(@PathVariable("id") Integer id) throws Exception {
         Medic obj = service.findById(id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }
 
     // forma 2 con hateoas
     @GetMapping("/hateoas/{id}")
-    public EntityModel<MedicDTO> findByHateoas(@PathVariable("id") Integer id) {
+    public EntityModel<MedicDTO> findByHateoas(@PathVariable("id") Integer id) throws Exception {
         EntityModel<MedicDTO> resource = EntityModel.of(convertToDto(service.findById(id))); // la salida
 
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
@@ -114,7 +114,7 @@ public class MedicController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Medic> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Medic> delete(@PathVariable("id") Integer id) throws Exception {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
