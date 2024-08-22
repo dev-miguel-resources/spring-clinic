@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,12 +24,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-        String exceptionMsg = (String) request.getAttribute("exception"); // capturar todas las validaciones de exception de los tokens
+        String exceptionMsg = (String) request.getAttribute("exception"); // capturar todas las validaciones de
+                                                                          // exception de los tokens
         if (exceptionMsg == null) {
             exceptionMsg = "Token not found or invalid";
         }
 
-        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), exceptionMsg, request.getRequestURI());
+        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), exceptionMsg,
+                request.getRequestURI());
         response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401 unauthorized
         response.getWriter().write(convertObjectToJson(errorResponse));
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -43,5 +45,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         mapper.findAndRegisterModules();
         return mapper.writeValueAsString(object); // transforma a un json
     }
-    
-}*/
+
+}

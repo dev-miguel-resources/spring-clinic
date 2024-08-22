@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import java.io.Serializable;
 import java.security.Key;
@@ -84,4 +84,4 @@ public class JwtTokenUtil implements Serializable {
 
     }
 
-}*/
+}

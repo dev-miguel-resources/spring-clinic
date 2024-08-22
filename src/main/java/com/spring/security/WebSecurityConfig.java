@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +30,11 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager(); // obtiene todas las configs. de authentication
     }
-    
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // devoldemos una instancia de encriptación para pass
@@ -41,25 +42,33 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwUserDetailsService).passwordEncoder(passwordEncoder()); // verificar que los pass en las solicitudes pertenecientes a un usuario se contrasten con el de bdd
+        auth.userDetailsService(jwUserDetailsService).passwordEncoder(passwordEncoder()); // verificar que los pass en
+                                                                                          // las solicitudes
+                                                                                          // pertenecientes a un usuario
+                                                                                          // se contrasten con el de bdd
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .csrf(AbstractHttpConfigurer::disable) // deshabilitar protección de ataques en vistas desde el backend
-            .authorizeHttpRequests(req -> req
-                .requestMatchers("/login").permitAll() // ruta pública para todos los usuarios
-                //.requestMatchers("/patients/**").permitAll() | .authenticated()
-                .anyRequest().permitAll() // cualquier otra ruta que no sea login son privadas
-            )
-            .httpBasic(Customizer.withDefaults()) // protege a las rutas http de ataques de hackers
-            .formLogin(AbstractHttpConfigurer::disable) // deshabilito el form login por defecto que trae spring
-            .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-            .sessionManagement(Customizer.withDefaults()); // habilitar este filtro en la sesión de usuarios
+                .csrf(AbstractHttpConfigurer::disable) // deshabilitar protección de ataques en vistas desde el backend
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/login").permitAll() // ruta pública para todos los usuarios
+                        // .requestMatchers("/patients/**").permitAll() | .authenticated()
+                        .anyRequest().authenticated() // cualquier otra ruta que no sea login son privadas
+                )
+                .httpBasic(Customizer.withDefaults()) // protege a las rutas http de ataques de hackers
+                .formLogin(AbstractHttpConfigurer::disable) // deshabilito el form login por defecto que trae spring
+                .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(Customizer.withDefaults()); // habilitar este filtro en la sesión de usuarios
 
-            httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // comprobamos que antes de devolver cualquier recurso se asegure que necesite token o no
-    
-            return httpSecurity.build(); // retornamos el filtro de seguridad creado
+        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // comprobamos que
+                                                                                                    // antes de devolver
+                                                                                                    // cualquier recurso
+                                                                                                    // se asegure que
+                                                                                                    // necesite token o
+                                                                                                    // no
+
+        return httpSecurity.build(); // retornamos el filtro de seguridad creado
     }
-}*/
+}

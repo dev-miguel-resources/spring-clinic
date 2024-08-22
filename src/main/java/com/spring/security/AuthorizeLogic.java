@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,4 +41,4 @@ public class AuthorizeLogic {
 
         return rpta;
     }
-}*/
+}

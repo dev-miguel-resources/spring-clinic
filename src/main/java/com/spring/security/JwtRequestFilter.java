@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsService jwtUserDetailsService;
-    
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -41,22 +41,28 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 } catch (Exception ex) {
                     request.setAttribute("exception", ex.getMessage());
                 }
-            } 
+            }
         }
-        
+
         if (username != null) {
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken userPasswordAuthToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-                userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // vinculamos todas claims para la solicitud
-                SecurityContextHolder.getContext().setAuthentication(userPasswordAuthToken); // habilita que luego autenticado el user pueda consultar si puede acceder a otros recursos
+                        userDetails, null, userDetails.getAuthorities());
+                userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // vinculamos
+                                                                                                              // todas
+                                                                                                              // claims
+                                                                                                              // para la
+                                                                                                              // solicitud
+                SecurityContextHolder.getContext().setAuthentication(userPasswordAuthToken); // habilita que luego
+                                                                                             // autenticado el user
+                                                                                             // pueda consultar si puede
+                                                                                             // acceder a otros recursos
             }
         }
 
         filterChain.doFilter(request, response);
-        
-    } 
-    
-    
-}*/
+
+    }
+
+}

@@ -1,4 +1,4 @@
-/*package com.spring.security;
+package com.spring.security;
 
 import java.io.Serializable;
 
@@ -13,5 +13,5 @@ public class JwtRequest implements Serializable { // que es que solicito al usua
 
     private String username;
     private String password;
-    
-}*/
+
+}
