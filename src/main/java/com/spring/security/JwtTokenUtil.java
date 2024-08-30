@@ -50,7 +50,7 @@ public class JwtTokenUtil implements Serializable {
                 .compact(); // devuelve la cadena del token con todo lo adherido
     }
 
-    private Key getSigninKey() { // config. la definición de la llave
+    private Key getSigninKey() { // config. la definición de la llave mediante algoritmo de encriptación
         return new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS512.getJcaName());
     }
 

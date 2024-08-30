@@ -1,4 +1,4 @@
-/*package com.spring.controller;
+package com.spring.controller;
 
 import java.util.List;
 
@@ -34,4 +34,4 @@ public class MenuController {
         return new ResponseEntity<>(menusDTO, HttpStatus.OK);
     }
 
-}*/
+}
