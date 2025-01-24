@@ -1,3 +1,4 @@
+
 package com.spring.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+
 @EnableWebSecurity // habilita todo
-@EnableMethodSecurity // habilitar ciertos validadores de authorization @PreAuthorize
+
+@EnableMethodSecurity // habilitar ciertos validadores de authorization
+// @PreAuthorize
 @RequiredArgsConstructor
 public class WebSecurityConfig { // esta clase centraliza todas las config. y las asocia a la app
 
@@ -43,9 +47,9 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(jwUserDetailsService).passwordEncoder(passwordEncoder()); // verificar que los pass en
-                                                                                          // las solicitudes
-                                                                                          // pertenecientes a un usuario
-                                                                                          // se contrasten con el de bdd
+        // las solicitudes
+        // pertenecientes a un usuario
+        // se contrasten con el de bdd
     }
 
     @Bean
@@ -62,12 +66,13 @@ public class WebSecurityConfig { // esta clase centraliza todas las config. y la
                 .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(Customizer.withDefaults()); // habilitar este filtro en la sesión de usuarios
 
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // comprobamos que
-                                                                                                    // antes de devolver
-                                                                                                    // cualquier recurso
-                                                                                                    // se asegure que
-                                                                                                    // necesite token o
-                                                                                                    // no
+        httpSecurity.addFilterBefore(jwtRequestFilter,
+                UsernamePasswordAuthenticationFilter.class); // comprobamos que
+        // antes de devolver
+        // cualquier recurso
+        // se asegure que
+        // necesite token o
+        // no
 
         return httpSecurity.build(); // retornamos el filtro de seguridad creado
     }

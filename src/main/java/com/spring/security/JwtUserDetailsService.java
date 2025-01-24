@@ -1,3 +1,4 @@
+
 package com.spring.security;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import com.spring.repo.IUserRepo;
 import lombok.RequiredArgsConstructor;
 
 @Service
+
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
 
@@ -26,7 +28,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         User user = repo.findOneByUsername(username);
 
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User not exists", username));
+            throw new UsernameNotFoundException(String.format("User not exists",
+                    username));
         }
 
         List<GrantedAuthority> roles = new ArrayList<>();
@@ -35,7 +38,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         });
 
         // Hacemos una ref. del contexto del user de spring security
-        UserDetails ud = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+        UserDetails ud = new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
                 roles);
 
         return ud;

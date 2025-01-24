@@ -1,3 +1,4 @@
+
 package com.spring.security;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 // una clase utilitaria para describir las características y comportamientos de los tokens de jwt
+
 @Component
 public class JwtTokenUtil implements Serializable {
 
@@ -33,8 +35,9 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         // definimos cual es la data que queremos agregrarle al token
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(",")));
+        claims.put("role",
+                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.joining(",")));
         claims.put("test", "spring-standard-jwt");
 
         return doGenerateToken(claims, userDetails.getUsername());
@@ -51,12 +54,14 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Key getSigninKey() { // config. la definición de la llave mediante algoritmo de encriptación
-        return new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS512.getJcaName());
+        return new SecretKeySpec(Base64.getDecoder().decode(secret),
+                SignatureAlgorithm.HS512.getJcaName());
     }
 
     // utils
     public Claims getAllClaimsFromToken(String token) { // me devuelva el contenido del token (body)
-        return Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(
+                token).getBody();
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -80,7 +85,8 @@ public class JwtTokenUtil implements Serializable {
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         // preguntar si el token pertenece a la sesión del usuario y si no ha expirado
-        return (username.equalsIgnoreCase(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equalsIgnoreCase(userDetails.getUsername()) &&
+                !isTokenExpired(token));
 
     }
 

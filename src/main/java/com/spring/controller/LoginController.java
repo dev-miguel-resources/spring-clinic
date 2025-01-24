@@ -1,3 +1,4 @@
+
 package com.spring.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import com.spring.security.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+
 @RequiredArgsConstructor
 public class LoginController {
 

@@ -17,7 +17,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// Clase encarga de las excepciones con procesos de authentication/authorization
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -25,7 +24,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         String exceptionMsg = (String) request.getAttribute("exception"); // capturar todas las validaciones de
-                                                                          // exception de los tokens
+        // exception de los tokens
         if (exceptionMsg == null) {
             exceptionMsg = "Token not found or invalid";
         }

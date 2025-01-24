@@ -1,3 +1,4 @@
+
 package com.spring.security;
 
 import java.io.IOException;
@@ -16,7 +17,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 // interceptamos las solicitudes http para el manejo de los tokens
+
 @Component
+
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -24,7 +27,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtUserDetailsService jwtUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         final String header = request.getHeader("Authorization");
 
@@ -50,14 +54,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken userPasswordAuthToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // vinculamos
-                                                                                                              // todas
-                                                                                                              // claims
-                                                                                                              // para la
-                                                                                                              // solicitud
-                SecurityContextHolder.getContext().setAuthentication(userPasswordAuthToken); // habilita que luego
-                                                                                             // autenticado el user
-                                                                                             // pueda consultar si puede
-                                                                                             // acceder a otros recursos
+                // todas
+                // claims
+                // para la
+                // solicitud
+                SecurityContextHolder.getContext().setAuthentication(userPasswordAuthToken);
+                // habilita que luego
+                // autenticado el user
+                // pueda consultar si puede
+                // acceder a otros recursos
             }
         }
 
